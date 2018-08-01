@@ -1,0 +1,66 @@
+#image_logo{
+	width:500px;
+	margin: auto;
+
+
+}
+
+
+
+#ticketbud_image{
+	width: 100%;
+}
+
+
+#click_here_text{
+	width: 500px;
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: auto;
+}
+
+#sync_button{
+	width: 100px;
+	align-self: center;
+	cursor: pointer;
+}
+
+
+
+#click_text{
+	align-self: center;
+
+}
+
+
+
+#update_info_container{
+	width: 100vw;
+	height:100vw;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;	
+}
+
+#events_update{
+	height: 100vw;
+	width: 500px;
+	background-color: #B8B8B8;
+}
+
+
+#contacts_update{
+	height: 100vw;
+	width: 500px;
+	background-color: #B8B8B8;
+
+}
+
+.header_update{
+	text-align: center;
+	text-decoration: underline;
+
+}
+
+
