@@ -1,8 +1,6 @@
 #image_logo{
 	width:500px;
 	margin: auto;
-
-
 }
 
 
@@ -47,6 +45,7 @@
 	height: 100vw;
 	width: 500px;
 	background-color: #B8B8B8;
+	visibility: hidden;
 }
 
 
@@ -54,7 +53,7 @@
 	height: 100vw;
 	width: 500px;
 	background-color: #B8B8B8;
-
+	visibility: hidden;
 }
 
 .header_update{
