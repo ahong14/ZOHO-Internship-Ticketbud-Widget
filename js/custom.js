@@ -9,6 +9,41 @@ function initializeWidget()
 
 
 function updateSync(){
+
+	var clearEvents = document.getElementById("new_events");
+	var clearContacts = document.getElementById("new_contacts");
+
+
+	clearEvents.innerHTML = "";
+	clearContacts.innerHTML = "";
+
+
+
+
+	/*
+	if(clearEvents.firstChild != null) {
+		while(clearEvents.firstChild){
+
+			clearEvents.removeChild(clearEvents.firstChild);
+		}
+	
+	}
+		
+
+	console.log(clearContacts.firstChild);	
+
+	if(clearContacts.firstChild != null){
+		
+		while(clearContacts.firstChild){
+
+			clearContacts.removeChild(clearEvents.firstChild);
+		}	
+	}
+	*/
+	
+
+
+
 	var eventShow = document.getElementById("events_update");
 	var contactsShow = document.getElementById("contacts_update");
 	
@@ -109,7 +144,16 @@ function updateSync(){
 								.then(function(data3){
 									console.log("checking to see if insert record worked");
 									console.log(data3);
+								
 							})
+
+
+							var event_field = document.getElementById("new_events");
+							var newEvent = document.createElement("p");
+							newEvent.textContent = newRecord.title;
+							event_field.appendChild(newEvent);
+
+											
 					
 						}
 
@@ -126,34 +170,119 @@ function updateSync(){
 	
 	console.log("getting ticket information");
 	for(let i = 0; i<events.length; i++){
-		var currentId = events[i].id;
-		var newMap = {};
-		newMap["event_id"] = currentId;
-
-//		console.log(newMap);
+		
 		console.log("getting contacts");
 		var contactRecords;  
 
 		ZOHO.CRM.API.getAllRecords({Entity: "Contacts"})
-			.then(function(data){
-				contactRecords = data;
+			.then(function(contactData){
+				contactRecords = contactData.data;
+//				console.log(contactRecords);
+				console.log(contactRecords);
+				var currentId = events[i].id;
+				var newMap = {};
+				newMap["event_id"] = currentId;
+
+
+				//get tickets information for current event
+				ZOHO.CRM.CONNECTOR.invokeAPI("testconnector0.zohoticketbud.getticketinformation", newMap)
+					.then(function(ticketData){
+//						console.log("getting tickets info");
+//						console.log(newMap);
+						var ticketResponse = ticketData.response;
+						var ticketsJSON = JSON.parse(ticketResponse);
+						var ticketList = ticketsJSON.tickets;
+						console.log(ticketList);
+		
+						var foundContact = false;
+		
+						
+						for(let j = 0; j <ticketList.length; j++){
+							var newContact = ticketList[j].name_on_ticket;
+							var newContactRecord = ticketList[j];
+							for(let k = 0; k < contactRecords.length; k++){
+
+								if(newContact == contactRecords[k].Full_Name){
+
+									foundContact = true;
+									break;
+
+								}
+								
+							}
+
+						
+							if(foundContact == false){
+								//CREATE NEW CONTACT
+
+								console.log("new contact found");
+								console.log(newContact);
+								//to do, create new contact record		
+
+								var checkedIn = "";
+								var purchaser = newContactRecord.purchaser;	
+								var quantity = purchaser.total_quantity;
+
+								if (newContactRecord.checked_in == false) {
+									checkedIn = "No";
+
+								}		
+
+
+								else{
+									checkedIn = "Yes";
+								}
+
+
+								var contactMap = {};
+
+								contactMap["First_Name"] = newContactRecord.first_name;
+								contactMap["Last_Name"] = newContactRecord.last_name;
+								contactMap["Full_Name"] = newContactRecord.name_on_ticket;
+								contactMap["Email"] = newContactRecord.email;
+								contactMap["testconnector0__Event_Title"] = events[i].title; 
+								contactMap["testconnector0__Name_On_Ticket"] = newContactRecord.name_on_ticket;
+								contactMap["testconnector0__Tickets_Purchased"] = String(quantity);
+								contactMap["testconnector0__Checked_In"] =  checkedIn;
+
+
+
+								ZOHO.CRM.API.insertRecord({Entity: "Contacts", APIData: contactMap})
+									.then(function(dataResponse){
+	
+										console.log(dataResponse);
+										
+									})
+
+								
+
+
+								var contactField = document.getElementById("new_contacts");
+								var newContact = document.createElement("p");
+								newContact.textContent = newContactRecord.name_on_ticket;
+								contactField.appendChild(newContact);
+
+	
+							}
+
+
+							foundContact = false;
+
+
+						}//end of for loop to check current contacts 
+	
+									
+					})
+
 			})
 		
-		console.log(contactRecords);
-
-
-		ZOHO.CRM.CONNECTOR.invokeAPI("testconnector0.zohoticketbud.getticketinformation", newMap)
-			.then(function(ticketData){
-				
-
-		})
-	}
+		}//end for for loop for event info
 
 
 				
 	})//end of get all events from invoke connector	
 
-alert("Events and Contacts Updated");
+	alert("Events and Contacts Updated");
 
 }
 
