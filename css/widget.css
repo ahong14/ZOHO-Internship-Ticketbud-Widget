@@ -22,6 +22,8 @@
 	width: 100px;
 	align-self: center;
 	cursor: pointer;
+	background-color: #4AB4F6;
+	border: solid black 1px;
 }
 
 
