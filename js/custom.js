@@ -93,6 +93,10 @@ function updateSync(){
 							recordData["testconnector0__Zip"] = locationInfo.zip;
 							recordData["testconnector0__Country"] = locationInfo.country;
 							
+
+							
+
+							
 							//map to create record
 							var createMap = [];
 							createMap["Entity"] = "testconnector0__Ticketbud_Events";
@@ -262,9 +266,9 @@ function updateSync(){
 										contactMap["testconnector0__Name_On_Ticket"] = newContactRecord.name_on_ticket;
 										contactMap["testconnector0__Tickets_Purchased"] = String(quantity);
 										contactMap["testconnector0__Checked_In"] =  checkedIn;
-
-
-
+										contactMap["testconnector0__Ticket_ID"] = String(newContactRecord.id);
+										
+		
 										ZOHO.CRM.API.insertRecord({Entity: "Contacts", APIData: contactMap})
 											.then(function(dataResponse){
 			
@@ -295,6 +299,26 @@ function updateSync(){
 										if(newContact == contactRecords[k].Full_Name){
 
 											foundContact = true;
+											//if record is found, check to see if it is checked in or not
+
+											if(newContactRecord.checked_in == true && contactRecords[k].testconnector0__Checked_In == "No"){
+												var recordMap = {};
+												recordMap["id"] = contactRecords[k].id;
+												recordMap["testconnector0__Checked_In"] = "Yes";
+												ZOHO.CRM.API.updateRecord({Entity:"Contacts", APIData: recordMap})
+													.then(function(dataUpdate){
+														console.log("checking update data");
+														console.log(dataUpdate);
+    														var contactField = document.getElementById("new_contacts");
+														var newContact = document.createElement("p");
+														newContact.textContent = contactRecords[k].Full_Name + " has checked in";
+														contactField.appendChild(newContact);
+			
+
+													})
+
+											}
+			
 											break;
 
 										}
@@ -333,6 +357,7 @@ function updateSync(){
 										contactMap["testconnector0__Name_On_Ticket"] = newContactRecord.name_on_ticket;
 										contactMap["testconnector0__Tickets_Purchased"] = String(quantity);
 										contactMap["testconnector0__Checked_In"] =  checkedIn;
+										contactMap["testconnector0__Ticket_ID"] = String(newContactRecord.id);
 
 
 

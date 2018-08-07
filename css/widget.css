@@ -1,8 +1,16 @@
+body{
+	background-image: url('https://d1ymyc6vn1o566.cloudfront.net/assets/default-banner-crowd-326272316d621f6771afffc65a89fa8a.jpg');
+	background-repeat: no-repeat;
+	background-position: center-fixed;
+	background-size: cover;
+}
+
+
+
 #image_logo{
 	width:500px;
 	margin: auto;
 }
-
 
 
 #ticketbud_image{
@@ -19,20 +27,20 @@
 }
 
 #sync_button{
-	width: 100px;
+	width: 200px;
+	height: 50px;
 	align-self: center;
 	cursor: pointer;
-	background-color: #4AB4F6;
+	background-color: #6B8FE4;
 	border: solid black 1px;
 }
 
 
-
 #click_text{
 	align-self: center;
+	font-weight: bold;
 
 }
-
 
 
 #update_info_container{
@@ -48,6 +56,7 @@
 	width: 500px;
 	background-color: #B8B8B8;
 	visibility: hidden;
+	font-weight: bold;
 }
 
 
@@ -56,12 +65,12 @@
 	width: 500px;
 	background-color: #B8B8B8;
 	visibility: hidden;
+	font-weight: bold;
 }
 
 .header_update{
 	text-align: center;
 	text-decoration: underline;
-
 }
 
 
