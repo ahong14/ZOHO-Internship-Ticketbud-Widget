@@ -10,6 +10,8 @@ function initializeWidget()
 
 function updateSync(){
 	
+	var overlay = document.getElementById("overlay");
+	overlay.style.visibility = "visible";
 
 	//clear events and contacts from previous update
 	var clearEvents = document.getElementById("new_events");
@@ -39,18 +41,23 @@ function updateSync(){
 
 	//invoke connector to get all events 
 	var empty_map = {};
-	ZOHO.CRM.CONNECTOR.invokeAPI("testconnector0.zohoticketbud.getallevents",empty_map)
+	ZOHO.CRM.CONNECTOR.invokeAPI("ticketbud.zohoticketbud.getallevents",empty_map)
 		.then(function(data){
 			
 			var eventsResponse = data.response;
 			var eventsList = JSON.parse(eventsResponse);
+
+			console.log("Events List: ");
+			console.log(eventsList);
 
 			//array of events from ticketbud account
 			events = eventsList.events;
 
 			//map to get records
 			var records_map = new Object();
-			records_map["Entity"] = "testconnector0__Ticketbud_Events";
+			// records_map["Entity"] = "ticketbud__Ticketbud_Events";
+			records_map["Entity"] = "Campaigns";
+
 		
 			//get all events from current zoho crm user
 			ZOHO.CRM.API.getAllRecords(records_map)
@@ -70,50 +77,50 @@ function updateSync(){
 
 							if(newRecord.sold_out == false){
 								isSoldOut = "No";
-				
 							}
 
 							else{
-
 								isSoldOut = "Yes";							
 							}
 							
 							//create APIData map object
 							var recordData = new Object();
-							recordData["testconnector0__Event_ID"] = String(newRecord.id);
-							recordData["testconnector0__CustomModule1_Name"] = newRecord.title;
-							recordData["testconnector0__Event_Start_Time"] = String(newRecord.event_start);
-							recordData["testconnector0__Event_End_Time"] = String(newRecord.event_end);
-							recordData["testconnector0__Tickets_Available"] = newRecord.tickets_available;
-							recordData["testconnector0__Tickets_Sold_Out"] = isSoldOut;
-							recordData["testconnector0__Time_Zone"] = newRecord.time_zone;
-							recordData["testconnector0__Address"] = locationInfo.address;
-							recordData["testconnector0__City"] = locationInfo.city;
-							recordData["testconnector0__State"] = locationInfo.state;
-							recordData["testconnector0__Zip"] = locationInfo.zip;
-							recordData["testconnector0__Country"] = locationInfo.country;
+							recordData["ticketbud__Event_ID"] = String(newRecord.id);
+							// recordData["CustomModule1_Name"] = newRecord.title;
+							recordData["Campaign_Name"] = newRecord.title;
+							recordData["ticketbud__Event_Start_Time"] = String(newRecord.event_start);
+							recordData["ticketbud__Event_End_Time"] = String(newRecord.event_end);
+							recordData["ticketbud__Tickets_Available"] = newRecord.tickets_available;
+							recordData["ticketbud__Tickets_Sold_Out"] = isSoldOut;
+							recordData["ticketbud__Time_Zone"] = newRecord.time_zone;
+							recordData["ticketbud__Address"] = locationInfo.address;
+							recordData["ticketbud__City"] = locationInfo.city;
+							recordData["ticketbud__State"] = locationInfo.state;
+							recordData["ticketbud__Zip"] = locationInfo.zip;
+							recordData["ticketbud__Country"] = locationInfo.country;
 							
-
-							
-
 							
 							//map to create record
 							var createMap = [];
-							createMap["Entity"] = "testconnector0__Ticketbud_Events";
+							// createMap["Entity"] = "ticketbud__Ticketbud_Events";
+							createMap["Entity"] = "Campaigns";
 							createMap["APIData"] = recordData;
 							console.log(createMap);
 						
 							//call ZOHO API to insert record	
 							ZOHO.CRM.API.insertRecord(createMap)
 								.then(function(data3){
+									console.log("inserting new event");
 									console.log("checking to see if insert record worked");
 									console.log(data3);
 								
 							})
 
+							//display new event added
 							var event_field = document.getElementById("new_events");
-							var newEvent = document.createElement("p");
+							var newEvent = document.createElement("div");
 							newEvent.textContent = newRecord.title;
+							newEvent.classList.add("new_update");
 							event_field.appendChild(newEvent);
 
 						}//end of for loop going through events
@@ -137,7 +144,6 @@ function updateSync(){
 							for(var j=0; j<currentRecords.length; j++){
 									
 								if(newEvent == currentRecords[j].Name.trim()){
-						
 									foundRecord = true;
 									break;
 								}
@@ -159,25 +165,24 @@ function updateSync(){
 									isSoldOut = "Yes";							
 								}
 
-							
 								//create APIData map object
 								var recordData = new Object();
-								recordData["testconnector0__Event_ID"] = String(newRecord.id);
-								recordData["testconnector0__CustomModule1_Name"] = newRecord.title;
-								recordData["testconnector0__Event_Start_Time"] = String(newRecord.event_start);
-								recordData["testconnector0__Event_End_Time"] = String(newRecord.event_end);
-								recordData["testconnector0__Tickets_Available"] = newRecord.tickets_available;
-								recordData["testconnector0__Tickets_Sold_Out"] = isSoldOut;
-								recordData["testconnector0__Time_Zone"] = newRecord.time_zone;
-								recordData["testconnector0__Address"] = locationInfo.address;
-								recordData["testconnector0__City"] = locationInfo.city;
-								recordData["testconnector0__State"] = locationInfo.state;
-								recordData["testconnector0__Zip"] = locationInfo.zip;
-								recordData["testconnector0__Country"] = locationInfo.country;
+								recordData["ticketbud__Event_ID"] = String(newRecord.id);
+								recordData["Campaign_Name"] = newRecord.title;
+								recordData["ticketbud__Event_Start_Time"] = String(newRecord.event_start);
+								recordData["ticketbud__Event_End_Time"] = String(newRecord.event_end);
+								recordData["ticketbud__Tickets_Available"] = newRecord.tickets_available;
+								recordData["ticketbud__Tickets_Sold_Out"] = isSoldOut;
+								recordData["ticketbud__Time_Zone"] = newRecord.time_zone;
+								recordData["ticketbud__Address"] = locationInfo.address;
+								recordData["ticketbud__City"] = locationInfo.city;
+								recordData["ticketbud__State"] = locationInfo.state;
+								recordData["ticketbud__Zip"] = locationInfo.zip;
+								recordData["ticketbud__Country"] = locationInfo.country;
 	
 								//map to create record
 								var createMap = [];
-								createMap["Entity"] = "testconnector0__Ticketbud_Events";
+								createMap["Entity"] = "Campaigns";
 								createMap["APIData"] = recordData;
 								console.log(createMap);
 						
@@ -186,13 +191,13 @@ function updateSync(){
 									.then(function(data3){
 										console.log("checking to see if insert record worked");
 										console.log(data3);
-								
 								})
 
-
+								//display new update
 								var event_field = document.getElementById("new_events");
-								var newEvent = document.createElement("p");
+								var newEvent = document.createElement("div");
 								newEvent.textContent = newRecord.title;
+								newEvent.classList.add("new_update");
 								event_field.appendChild(newEvent);
 							}
 
@@ -213,6 +218,8 @@ function updateSync(){
 				console.log("getting contacts");
 				var contactRecords;  
 
+
+				//get all contacts
 				ZOHO.CRM.API.getAllRecords({Entity: "Contacts"})
 					.then(function(contactData){
 						contactRecords = contactData.data;
@@ -222,9 +229,8 @@ function updateSync(){
 						var newMap = {};
 						newMap["event_id"] = currentId;
 
-
 						//get tickets information for current event
-						ZOHO.CRM.CONNECTOR.invokeAPI("testconnector0.zohoticketbud.getticketinformation", newMap)
+						ZOHO.CRM.CONNECTOR.invokeAPI("ticketbud.zohoticketbud.getticketinformation", newMap)
 							.then(function(ticketData){
 		//						console.log("getting tickets info");
 		//						console.log(newMap);
@@ -237,7 +243,6 @@ function updateSync(){
 				
 								
 								//create and add new records 
-
 								if(contactRecords == undefined){
 
 									for(let m = 0; m< ticketList.length; m++){
@@ -249,7 +254,7 @@ function updateSync(){
 										if (newContactRecord.checked_in == false) {
 											checkedIn = "No";
 
-										}		
+											}		
 
 										else{
 											checkedIn = "Yes";
@@ -262,23 +267,25 @@ function updateSync(){
 										contactMap["Last_Name"] = newContactRecord.last_name;
 										contactMap["Full_Name"] = newContactRecord.name_on_ticket;
 										contactMap["Email"] = newContactRecord.email;
-										contactMap["testconnector0__Event_Title"] = events[i].title; 
-										contactMap["testconnector0__Name_On_Ticket"] = newContactRecord.name_on_ticket;
-										contactMap["testconnector0__Tickets_Purchased"] = String(quantity);
-										contactMap["testconnector0__Checked_In"] =  checkedIn;
-										contactMap["testconnector0__Ticket_ID"] = String(newContactRecord.id);
+										contactMap["ticketbud__Event_Title"] = events[i].title; 
+										contactMap["ticketbud__Name_On_Ticket"] = newContactRecord.name_on_ticket;
+										contactMap["ticketbud__Tickets_Purchased"] = String(quantity);
+										contactMap["ticketbud__Checked_In"] =  checkedIn;
+										contactMap["ticketbud__Event_ID"] = String(newContactRecord.event_id);
+										contactMap["ticketbud__Ticket_ID"] = String(newContactRecord.id);
 										
 		
 										ZOHO.CRM.API.insertRecord({Entity: "Contacts", APIData: contactMap})
 											.then(function(dataResponse){
-			
+												console.log("inserting contacts");
 												console.log(dataResponse);
 												
 											})
 
 										var contactField = document.getElementById("new_contacts");
-										var newContact = document.createElement("p");
+										var newContact = document.createElement("div");
 										newContact.textContent = newContactRecord.name_on_ticket;
+										newContact.classList.add("new_update");
 										contactField.appendChild(newContact);
 
 
@@ -293,28 +300,47 @@ function updateSync(){
 								
 								for(let j = 0; j <ticketList.length; j++){
 									var newContact = ticketList[j].name_on_ticket;
+									var newContactEventId =  ticketList[j].event_id;
 									var newContactRecord = ticketList[j];
 									for(let k = 0; k < contactRecords.length; k++){
-
-										if(newContact == contactRecords[k].Full_Name){
-
+										console.log(newContactEventId);
+										console.log(contactRecords[k].ticketbud__Event_ID);
+										if(newContact == contactRecords[k].Full_Name && newContactEventId == contactRecords[k].ticketbud__Event_ID){
+											console.log("same name and event id");
 											foundContact = true;
 											//if record is found, check to see if it is checked in or not
 
-											if(newContactRecord.checked_in == true && contactRecords[k].testconnector0__Checked_In == "No"){
+											if(newContactRecord.checked_in == true && contactRecords[k].ticketbud__Checked_In == "No"){
 												var recordMap = {};
 												recordMap["id"] = contactRecords[k].id;
-												recordMap["testconnector0__Checked_In"] = "Yes";
+												recordMap["ticketbud__Checked_In"] = "Yes";
 												ZOHO.CRM.API.updateRecord({Entity:"Contacts", APIData: recordMap})
 													.then(function(dataUpdate){
 														console.log("checking update data");
 														console.log(dataUpdate);
-    														var contactField = document.getElementById("new_contacts");
-														var newContact = document.createElement("p");
+    													var contactField = document.getElementById("new_contacts");
+														var newContact = document.createElement("div");
 														newContact.textContent = contactRecords[k].Full_Name + " has checked in";
+														newContact.classList.add("new_update");
 														contactField.appendChild(newContact);
 			
+													})
 
+											}
+											else if(newContactRecord.checked_in == false && contactRecords[k].ticketbud__Checked_In == "Yes"){
+												var recordMap = {};
+												recordMap["id"] = contactRecords[k].id;
+												recordMap["ticketbud__Checked_In"] = "No";
+												ZOHO.CRM.API.updateRecord({Entity:"Contacts", APIData: recordMap})
+													.then(function(dataUpdate){
+														// console.log("checking update data");
+														// console.log(dataUpdate);
+    													// var contactField = document.getElementById("new_contacts");
+														// var newContact = document.createElement("div");
+														// newContact.textContent = contactRecords[k].Full_Name + " has checked in";
+														// newContact.classList.add("new_update");
+														// contactField.appendChild(newContact);
+		
 													})
 
 											}
@@ -341,11 +367,9 @@ function updateSync(){
 
 										}		
 
-
 										else{
 											checkedIn = "Yes";
 										}
-
 
 										var contactMap = {};
 
@@ -353,24 +377,25 @@ function updateSync(){
 										contactMap["Last_Name"] = newContactRecord.last_name;
 										contactMap["Full_Name"] = newContactRecord.name_on_ticket;
 										contactMap["Email"] = newContactRecord.email;
-										contactMap["testconnector0__Event_Title"] = events[i].title; 
-										contactMap["testconnector0__Name_On_Ticket"] = newContactRecord.name_on_ticket;
-										contactMap["testconnector0__Tickets_Purchased"] = String(quantity);
-										contactMap["testconnector0__Checked_In"] =  checkedIn;
-										contactMap["testconnector0__Ticket_ID"] = String(newContactRecord.id);
-
-
+										contactMap["ticketbud__Event_Title"] = events[i].title; 
+										contactMap["ticketbud__Name_On_Ticket"] = newContactRecord.name_on_ticket;
+										contactMap["ticketbud__Tickets_Purchased"] = String(quantity);
+										contactMap["ticketbud__Checked_In"] =  checkedIn;
+										contactMap["ticketbud__Ticket_ID"] = String(newContactRecord.id);
+										contactMap["ticketbud__Event_ID"] = String(newContactRecord.event_id);
 
 										ZOHO.CRM.API.insertRecord({Entity: "Contacts", APIData: contactMap})
 											.then(function(dataResponse){
-			
+												consle.log("inserting contact");
 												console.log(dataResponse);
 												
 											})
-
+										
+										
 										var contactField = document.getElementById("new_contacts");
-										var newContact = document.createElement("p");
+										var newContact = document.createElement("div");
 										newContact.textContent = newContactRecord.name_on_ticket;
+										newContact.classList.add("new_update");
 										contactField.appendChild(newContact);
 			
 									}
@@ -387,7 +412,24 @@ function updateSync(){
 	})//end of get all events from invoke connector	
 
 	//end of update
-	alert("Events and Contacts Updated");
+
+}
+
+
+function toggleOverlay(){
+
+	var overlay = document.getElementById("overlay");
+	var sync_value = document.getElementById('sync_value');
+	
+	if(overlay.style.visibility == "hidden"){
+		overlay.style.visibility = "visible";
+	}
+
+	else{
+		overlay.style.visibility = "hidden";
+	}
+
+	sync_value.textContent = "Synced";
 
 }
 

@@ -1,59 +1,79 @@
-
+<!doctype html>
 <html>
 
 	<head>
-    		<meta charset="UTF-8">
-    		<link rel = "stylesheet" type = "text/css" href = "css/widget.css"/>
-    		<script type="text/javascript" src = "../app/js/custom.js"> </script>
+    	<meta charset="UTF-8">
+    	<link rel = "stylesheet" type = "text/css" href = "css/widget.css"/>
+    	<script type="text/javascript" src = "../app/js/custom.js"> </script>
 		<script type="text/javascript" src = "../app/js/lib/ZohoEmbededAppSDK.min.js"></script>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	</head>
 
-
 	<body>
-	
-		<div id = "image_logo">
 		
-			<img src = "ticketbud_logo.jpg" id = "ticketbud_image" alt = "ticketbud logo" />
-					
-
-		</div>
-
-		
-
-		<div id = "click_here_text">
-			<p id = "click_text"> Click here to update and sync Zoho CRM/Ticketbud </p>
-			<button class = "material-icons" id="sync_button" onclick = "updateSync()"> &#xe627; </button>
-
-		</div>
+		<div id = "flex_container">
 
 
-		<!-- <div id = "zoho_logo">
-			<img src = ""
-		</div> -->
+			<div id = "description">
+				<h1 class = "underline"> Ticketbud Extension Sync </h1>
+				<p> <strong> This extension syncs all events and contacts from Ticketbud to Zoho CRM </strong></p>
+				<p> <strong> Events are synced to Campaign module. Attendees for each event are synced to Contacts module. </strong></p>
+				<p> <strong> Synced events/contacts are displayed below. </strong></p>
 
-		
-		<div id = "update_info_container">
-			<div id = "events_update">
-				<h2 class = "header_update"> Events </h2>
-				<p> New Events Added: </p>
-				<div id = "new_events">
-					
+			</div>
+
+			<div id = "sync_status">
+				<h1> Sync Status: </h1>
+				<h1 id = "sync_value"> Yet To Sync  </h1>
+			</div>
+
+			<div id = "sync_container">
+				<div class = "image_logo">
+					<img src = "ticketbud_logo_better.png" id = "ticketbud_image" alt = "ticketbud logo" />
+				</div>
+
+				<div id = "click_here_text">
+					<p id = "click_text"> Sync Ticketbud to Zoho CRM </p>
+					<button class = "material-icons" id="sync_button" onclick = "updateSync()"> &#xe627; </button>
+				</div>
+
+				<div class = "image_logo" id = "zoho_logo">
+					<img src = "zoho_logo_better.png" id = "zoho_image" alt = "zoho logo"/>
+				</div>
+
+			</div>
+
+			<div id = "update_info_container">
+				<div id = "events_update">
+					<h2 class = "header_update"> New Events Added </h2>
+					<h3 class = "update_header"> Updates </h3>
+					<div class = "new_updates_container" id = "new_events">
+						
+					</div>
+				</div>
+
+
+				<div id = "contacts_update">
+					<h2 class = "header_update"> New Contacts Added </h2>
+					<h3 class = "update_header"> Updates </h3>
+					<div class = "new_updates_container" id = "new_contacts">
+
+					</div>
+				</div>
+
+			</div>
+
+			<div id="overlay"> 
+				<div id = "overlay_content">
+					<h1 id = "overlay_header"> Sync Successful </h1>
+					<button id = "ok_button" onclick = "toggleOverlay()"> Ok </button>
 				</div>
 			</div>
 
 
-			<div id = "contacts_update">
-				<h2 class = "header_update"> Contacts </h2>
-				<p> New Contacts Added: </p>
-				<div id = "new_contacts">
-
-				</div>
-			</div>
-
-		</div>
+		</div> <!-- end of container -->
 
 	</body>
-
 
 </html>
